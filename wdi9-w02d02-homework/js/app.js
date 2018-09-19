@@ -2,6 +2,7 @@
 // use given array(cards) of pokemon cards to randomly draw 6 cards
 // split them to objects(players) stored as properties
 // use a function with a nested while loop to simulate an actual player battle
+//
 // console.log(the scoreboard after each round)
 // console.log(the cards in the player's hand)
 // console.log(the cards in the computer's hand)
@@ -69,20 +70,8 @@ const cards = [
   ]
 const size = 6;
 
-const game = {
-   
-    }
-
-const player = {
-    hand: 
-}
-
-const autoPlayer = {
-
-}
-
-  function getNewDeck(box, size) {
-    let shuffled = box.slice(0), i = cards.length, temp, index;
+function getNewDeck(cards, size) {
+    let shuffled = cards.slice(0), i = cards.length, temp, index;
     while (i--) {
         index = Math.floor((i + 1) * Math.random());
         temp = shuffled[index];
@@ -94,14 +83,57 @@ const autoPlayer = {
 
     
 var randomCards = getNewDeck(cards, 6);
-console.log(randomCards);
+// console.log(randomCards);
 
 
-playerCards = randomCards.slice(0,3);
-autoPlayerCards = randomCards.slice(3,6);
-console.log(playerCards, autoPlayerCards);
+let playerCards = randomCards.slice(0,3);
+let autoPlayerCards = randomCards.slice(3,6);
+// console.log(playerCards, autoPlayerCards);
 
 
-const player() = {
-    hand: 
+const player = {
+    hand: playerCards,
+    score: 0
 }
+// console.log(player.hand);
+
+
+const autoPlayer = {
+    hand: autoPlayerCards,
+    score: 0
+
+}
+// console.log(autoPlayer.hand)
+
+const cardsInPlay = {
+      card1: playerCards[j],
+      card2: autoPlayerCards[j]
+}
+// console.log(cardsInPlay);
+
+
+
+const battle = () => {
+  for(let j = 0; j < 2; j++){
+    console.log(`Player Chooses ${cardsInPlay.card1.name}! Go ${cardsInPlay.card1.name}!`)
+    console.log(`autoPlayer Chooses ${cardsInPlay.card2.name}! Go ${cardsInPlay.card2.name}!`)
+    if (cardsInPlay.card1.damage > cardsInPlay.card2.damage){
+            // console.log(cardsInPlay.card1[j]);
+            console.log("Player Wins!");
+            return player.score += 1
+    }  else {
+            console.log("Player Loses!");
+            return autoPlayer.score += 1
+    }
+  }  
+}
+// console.log(battle());
+
+
+
+while(player.score || autoPlayer.score < 3){
+    battle();
+}
+
+console.log(`Player Score: ${player.score}`)
+console.log(`autoPlayer Score: ${autoPlayer.score}`)
