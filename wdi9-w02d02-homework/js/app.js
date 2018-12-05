@@ -1,8 +1,8 @@
 
 // use given array(cards) of pokemon cards to randomly draw 6 cards
 // split them to objects(players) stored as properties
-// use a function with a nested while loop to simulate an actual player battle
-//
+// use a function with a nested for loop to simulate an actual player battle
+// use a while loop to run battle function
 // console.log(the scoreboard after each round)
 // console.log(the cards in the player's hand)
 // console.log(the cards in the computer's hand)
@@ -11,6 +11,12 @@
 // console.log(the winner of the game when the game is over)
 // console.log(the final score when the game is over)
 
+
+let player1;
+let player2;
+let attacker1;
+let attacker2;
+const cardsInPlay = []
 const cards = [
     {
       name: "Bulbasaur",
@@ -68,72 +74,66 @@ const cards = [
       damage: 40
     }
   ]
-const size = 6;
 
-function getNewDeck(cards, size) {
-    let shuffled = cards.slice(0), i = cards.length, temp, index;
-    while (i--) {
-        index = Math.floor((i + 1) * Math.random());
-        temp = shuffled[index];
-        shuffled[index] = shuffled[i];
-        shuffled[i] = temp;
-    }
-    return shuffled.slice(0, size);
+const getHand = (arr) => {
+  let cardsIndex = Math.floor(Math.random() *(cards.length));
+  arr.push(cards[cardsIndex]);
+  cardsInPlay.push(cards[cardsIndex]);
+  cards.splice(cardsIndex, 1);
+  return arr;
 }
 
-    
-var randomCards = getNewDeck(cards, 6);
-// console.log(randomCards);
-
-
-let playerCards = randomCards.slice(0,3);
-let autoPlayerCards = randomCards.slice(3,6);
-// console.log(playerCards, autoPlayerCards);
-
-
-const player = {
-    hand: playerCards,
-    score: 0
+class Player  {
+  constructor(name){
+  this.name = name;
+  this.hand = [];
+  this.points = 0;
+  this.roundsWon = 0;
+  }
+  playCard(index){
+    let attack = this.hand[index].damage;
+    this.hand.splice(index, 1);
+    return attack;
+  }
 }
-// console.log(player.hand);
+const eggbert = new Player('Eggbert')
+const computer = new Player('Computer')
 
-
-const autoPlayer = {
-    hand: autoPlayerCards,
-    score: 0
-
+const gameStart = (handSize, player1, player2) => {
+  attacker1 = player1;
+  attacker2 = player2;
+  for (let i = 0; i < handSize; i++) {
+      getHand(player1.hand);   
+      getHand(player2.hand);   
+  }
+  return 'let the game begin';
 }
-// console.log(autoPlayer.hand)
-
-const cardsInPlay = {
-      card1: playerCards[j],
-      card2: autoPlayerCards[j]
-}
-// console.log(cardsInPlay);
-
-
 
 const battle = () => {
-  for(let j = 0; j < 2; j++){
-    console.log(`Player Chooses ${cardsInPlay.card1.name}! Go ${cardsInPlay.card1.name}!`)
-    console.log(`autoPlayer Chooses ${cardsInPlay.card2.name}! Go ${cardsInPlay.card2.name}!`)
-    if (cardsInPlay.card1.damage > cardsInPlay.card2.damage){
-            // console.log(cardsInPlay.card1[j]);
-            console.log("Player Wins!");
-            return player.score += 1
-    }  else {
-            console.log("Player Loses!");
-            return autoPlayer.score += 1
-    }
-  }  
+  while(attacker1.hand.length > 0 && attacker2.hand.length > 0){
+      let attack1 = attacker1.playCard(0);
+      let attack2 = attacker2.playCard(0);
+      if (attack1 > attack2){
+          attacker1.points++;
+      }
+      if (attack2 > attack1){
+          attacker2.points++;
+      }
+      console.log(`Score: ${attacker1['name']}: ${attacker1.points} - ${attacker2['name']}: ${attacker2.points} `);
+  }
+  let winner;
+  if (attacker1.points > attacker2.points){
+      attacker1.roundsWon++;
+      winner = attacker1['name'];
+  }
+  if (attacker2.points > attacker1.points){
+      attacker2.roundsWon++;
+      winner = attacker2['name'];
+  }
+  console.log(`rounds won:  ${attacker1['name']}: ${attacker1.roundsWon} - ${attacker2['name']}: ${attacker2.roundsWon}`);
+  cards.concat(cardsInPlay);
+  return console.log(winner + ' WON!');
 }
-// console.log(battle());
+gameStart(9, eggbert, computer);
+battle();
 
-
-
-while(player.score || autoPlayer.score < 3){
-    battle();
-}
-
-console.log(`Player Score: ${player.score}`)
-console.log(`autoPlayer Score: ${autoPlayer.score}`)
